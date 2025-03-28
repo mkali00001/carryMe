@@ -6,12 +6,26 @@ const db = require('./config/mongoose-connection')
 const ownersRouter = require('./routes/ownersRouter')
 const usersRouter = require('./routes/usersRouter')
 const productsRouter = require('./routes/productsRouter')
+let expressSession = require('express-session')
+let connectFlash = require('connect-flash')
 const index = require('./routes/index')
+require('dotenv').config()
 
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cookieParser())
+
+app.use(
+    expressSession({
+        resave:false,
+        saveUninitialized:false,
+        secret : process.env.EXPRESS_SESSION_SECRET,
+    })
+)
+
+app.use(connectFlash())
+
 app.use(express.static(path.join(__dirname,"public")))
 app.set("view engine", "ejs")
 
